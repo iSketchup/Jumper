@@ -3,7 +3,6 @@ const ctx = canvas.getContext("2d");
 
 canvas.width = 800;
 canvas.height = 400;
-
 let score = 0;
 
 // Player
@@ -18,26 +17,43 @@ const player = {
 };
 
 // Scroll
-let scrollSpeed = 5;
+let scrollSpeed = 7;
 let groundOffset = 0;
 
 // Obstacle
 let obstacle = {
     x: 800,
     y: 300,
-    width: 30,
+    width: 50,
     height: 40,
     scored: false
 };
 
-
-// Input
-document.addEventListener("keydown", () => {
-    if (player.grounded) {
-        player.dy = player.jumpPower;
-        player.grounded = false;
-    }
+// Tastatur
+document.addEventListener("keydown", (e) => {
+  if (
+    e.code === "Space" ||
+    e.code === "Enter" ||
+    e.code === "ArrowUp"
+  ) {
+    e.preventDefault();
+    jump();
+  }
 });
+
+// Maus
+document.addEventListener("mousedown", () => {
+  jump();
+});
+
+
+function jump() {
+  if (!player.grounded) return;
+
+  player.dy = player.jumpPower;
+  player.grounded = false;
+}
+
 
 function update() {
     // Player physics
@@ -58,6 +74,8 @@ function update() {
 
     if (obstacle.x + obstacle.width < 0) {
         obstacle.x = 800;
+        obstacle.width = Math.floor(Math.random() * (100 - 40 + 1)) + 40;
+
         obstacle.scored = false;
     }
 
@@ -66,8 +84,9 @@ function update() {
 }
 
 function Score(){
-    if (player.x <= obstacle.x + obstacle.width && !obstacle.scored)
-        scored++;
+    if (player.x + player.size <= obstacle.x + obstacle.width/2 && !obstacle.scored)
+        score++;
+    obstacle.scored = true;
 }
 
 
@@ -77,12 +96,8 @@ function CheckCollition(){
 if(player.x <= obstacle.x + obstacle.width && player.x + player.size >= obstacle.x &&
    player.y <= obstacle.y + obstacle.height && player.y + player.size >= obstacle.y
 ){
-    console.log("sigma");
-    
     return false;
 }
-
-console.log("ligma");
 
 return true;
 
@@ -92,8 +107,8 @@ function drawGround() {
     ctx.fillStyle = "#555";
 
     // two segments for infinite scrolling
-    ctx.fillRect(groundOffset, 350, canvas.width, 50);
-    ctx.fillRect(groundOffset + canvas.width, 350, canvas.width, 50);
+    ctx.fillRect(groundOffset, 340, canvas.width, 60);
+    ctx.fillRect(groundOffset + canvas.width, 340, canvas.width, 60);
 
     if (groundOffset <= -canvas.width) {
         groundOffset = 0;
@@ -112,13 +127,22 @@ function draw() {
     // Obstacle
     ctx.fillStyle = "red";
     ctx.fillRect(obstacle.x, obstacle.y, obstacle.width, obstacle.height);
+
+
+    ctx.fillStyle = "white";
+    ctx.font = "20px system-ui";
+    ctx.fillText(`Score: ${score}`, 20, 30);
 }
 
 function loop() {
     
     if (!CheckCollition())
     {
-        console.log("hit");
+        const highscore = Number(localStorage.getItem("highscore")) || 0;
+
+        if (score > highscore) {
+            localStorage.setItem("highscore", score);
+}
         window.location.href = "../../docs";
         return;
 

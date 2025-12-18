@@ -7,10 +7,21 @@
 </head>
 <body>
 
-  <button id="playBtn">Play Game</button>
+  <div class="menu-container">
+    <div id="highscore-container">
+      Highscore: <span id="score-value">0</span>
+    </div>
+
+    <button id="playBtn">Play Game</button>
+  </div>
 
   <script>
     const playBtn = document.getElementById("playBtn");
+    const scoreValueEl = document.getElementById("score-value");
+
+    // Highscore aus dem Speicher laden
+    const highscore = localStorage.getItem("highscore") || 0;
+    scoreValueEl.textContent = highscore;
 
     function startGame() {
       window.location.href = "Game/index.html";
