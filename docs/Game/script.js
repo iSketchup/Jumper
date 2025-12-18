@@ -80,7 +80,6 @@ function update() {
     }
 
     Score();
-
 }
 
 function Score(){
