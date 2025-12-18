@@ -142,7 +142,7 @@ function loop() {
         if (score > highscore) {
             localStorage.setItem("highscore", score);
 }
-        window.location.href = "../index.html";
+        window.location.href = "/docs/index.html";
         return;
 
     }
