@@ -41,6 +41,11 @@ document.addEventListener("keydown", (e) => {
   }
 });
 
+playBtn.addEventListener("touchstart", (e) => {
+    e.preventDefault(); // verhindert Ghost-Clicks
+    jump();
+});
+
 // Maus
 document.addEventListener("mousedown", () => {
   jump();
